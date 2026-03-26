@@ -501,4 +501,46 @@
         });
     </script>
 </body>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import { getDatabase, ref, get, set, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+      
+      const firebaseConfig = {
+        apiKey: "AIzaSyD69_V7hB3GV269j7gAeaxKUbVZzAMZHug",
+        authDomain: "future-invest-9a87a.firebaseapp.com",
+        databaseURL: "https://future-invest-9a87a-default-rtdb.firebaseio.com",
+        projectId: "future-invest-9a87a",
+        storageBucket: "future-invest-9a87a.firebasestorage.app",
+        messagingSenderId: "182595047783",
+        appId: "1:182595047783:web:0e18b546a46b967a1b1fc2"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      // 1. تسجيل عدد الزوار عند فتح الصفحة
+      const visitorsRef = ref(db, 'stats/visitors');
+      get(visitorsRef).then((snapshot) => {
+          const currentCount = snapshot.exists() ? snapshot.val() : 0;
+          set(visitorsRef, currentCount + 1);
+      });
+
+      // 2. إرسال بيانات الطلب عند الضغط على تأكيد السداد
+      document.getElementById('confirmBtn').addEventListener('click', () => {
+          const transId = document.getElementById('transactionId').value;
+          const amountVal = document.getElementById('amountDisplay').value;
+          const accNum = document.getElementById('generatedAcc').innerText;
+
+          if (transId.trim() !== '') {
+              const requestsRef = ref(db, 'requests');
+              push(requestsRef, {
+                  accountNumber: accNum || 'غير محدد',
+                  transactionId: transId,
+                  amount: amountVal.replace(/[^0-9]/g, ''), // استخراج الأرقام فقط
+                  timestamp: new Date().toLocaleString('ar-EG')
+              });
+          }
+      });
+    </script>
+
 </html>
