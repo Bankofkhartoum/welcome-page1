@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة 1+ | استثمار المستقبل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --bg: #0a0f1c;
+            --card-bg: rgba(16, 25, 43, 0.85);
+            --border: rgba(0, 242, 254, 0.3);
+            --text: #ffffff;
+            --text-muted: #a0aec0;
+            --success: #2ecc71;
+            --warning: #ff4757;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image: radial-gradient(circle at 50% -10%, #112240 0%, var(--bg) 70%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Futuristic background effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.15);
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            line-height: 1.7;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .main-button {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            border: none;
+            padding: 18px 50px;
+            color: #000;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .main-button:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
+        }
+
+        .main-button:disabled {
+            background: #333;
+            color: #888;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Modals & Overlays */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #10192b;
+            border: 1px solid var(--primary);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.25);
+            animation: modalPopIn 0.4s ease-out;
+            position: relative;
+        }
+
+        @keyframes modalPopIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .loading-text {
+            font-size: 2.5rem;
+            letter-spacing: 8px;
+            color: var(--primary);
+            animation: loadingBlink 1s infinite;
+        }
+
+        @keyframes loadingBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .data-box {
+            background: rgba(0, 242, 254, 0.08);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px dashed var(--primary);
+        }
+
+        .warning-text {
+            color: var(--warning);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+        /* Payment Section */
+        #paymentSection {
+            display: none;
+            margin-top: 30px;
+            animation: modalPopIn 0.5s ease;
+        }
+
+        .agent-search-btn {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 25px;
+            transition: all 0.3s ease;
+        }
+
+        .agent-search-btn:hover {
+            background: rgba(0, 242, 254, 0.1);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .active-agent-box {
+            display: none;
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid var(--success);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2rem;
+            animation: modalPopIn 0.4s ease;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: right;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Interactive Amount Control */
+        .amount-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .amount-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .amount-btn:hover {
+            background: rgba(0, 242, 254, 0.2);
+        }
+
+        .amount-input-display {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+            pointer-events: none; /* Prevent direct typing */
+        }
+
+        /* SVG Emoji Icon (Corrected and Professional) */
+        .svg-icon {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px var(--primary));
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <h1>منصة 1+</h1>
+        <p class="subtitle">المنصة السودانية الأولى والموثوقة للاستثمار طويل الأمد.<br>تبدأ فقط ابتداءً من <span class="highlight">10,000 ج.س</span>.<br>سيتم الإطلاق قريباً، اشترك بها قبل الانطلاق اليوم!</p>
+        
+        <div id="actionArea">
+            <button class="main-button" id="subscribeBtn">اشترك الآن</button>
+        </div>
+
+        <div id="paymentSection">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">للتسجيل في عرض الاستثمار</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 25px; color: var(--text-muted);">قم بإتمام صفقة التسجيل المسبق عبر السداد للوكلاء أدناه</p>
+            
+            <button class="agent-search-btn" id="searchAgentBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                البحث عن وكيل نشط
+            </button>
+
+            <div id="agentBox" class="active-agent-box">
+                وكيل نشط متاح الآن<br>
+                رقم الحساب (بنكك): <span style="color: #fff; font-size: 1.5rem; display: block; margin-top: 8px;">9684354</span>
+            </div>
+
+            <div id="paymentForm" style="display: none; margin-top: 30px;">
+                <div class="input-group">
+                    <label>رقم العملية كاملاً:</label>
+                    <input type="text" id="transactionId" placeholder="أدخل رقم عملية التحويل" required>
+                </div>
+                <div class="input-group">
+                    <label>تحديد قيمة المبلغ (ج.س):</label>
+                    <div class="amount-control">
+                        <button type="button" class="amount-btn" id="amountMinus">-</button>
+                        <input type="text" id="amountDisplay" class="amount-input-display" value="+10,000-" readonly>
+                        <button type="button" class="amount-btn" id="amountPlus">+</button>
+                    </div>
+                </div>
+                <button class="main-button" id="confirmBtn" style="margin-top: 15px;">تأكيد السداد</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="accountOverlay">
+        <div class="modal-content">
+            <div id="loadingState">
+                <div class="loading-text">•••</div>
+                <p style="margin-top: 20px; color: var(--text-muted);">جاري إنشاء حسابك...</p>
+            </div>
+            <div id="accountState" style="display: none;">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">تم إنشاء الحساب بنجاح</h3>
+                <div class="data-box">
+                    <p style="margin-bottom: 12px;">رقم الحساب:<br><strong id="generatedAcc" style="font-size: 1.6rem; letter-spacing: 3px;"></strong></p>
+                    <p>كلمة المرور:<br><strong id="generatedPass" style="font-size: 1.4rem; color: var(--secondary);"></strong></p>
+                </div>
+                <p class="warning-text">⚠️ يرجى حفظ هذه البيانات في هاتفك جيداً، ستحتاجها لتسجيل الدخول لاحقاً!</p>
+                <button class="main-button" id="closeAccountBtn" style="padding: 12px 40px; font-size: 1.1rem; max-width: 250px;">إغلاق ومتابعة</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="successOverlay">
+        <div class="modal-content">
+            <svg class="svg-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="var(--primary)" stroke-width="4"/>
+                <circle cx="35" cy="40" r="6" fill="var(--secondary)"/>
+                <circle cx="65" cy="40" r="6" fill="var(--secondary)"/>
+                <path d="M 30 65 Q 50 85 70 65" fill="none" stroke="var(--primary)" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+            <h2 style="color: var(--primary); margin-bottom: 20px; font-size: 2.2rem;">تهانينا!</h2>
+            <p style="color: #fff; line-height: 1.8; margin-bottom: 30px; font-size: 1.05rem;">طلبك قيد المراجعة الآن. سيتم التحقق من تسديدك، وإذا تم التأكد من السداد سيتم إضافتك بشكل مسبق إلى منصة الاستثمار.</p>
+            <button class="main-button" id="finalCloseBtn" style="padding: 12px 40px; font-size: 1.1rem; max-width: 200px;">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        const accountOverlay = document.getElementById('accountOverlay');
+        const loadingState = document.getElementById('loadingState');
+        const accountState = document.getElementById('accountState');
+        const closeAccountBtn = document.getElementById('closeAccountBtn');
+        const actionArea = document.getElementById('actionArea');
+        const paymentSection = document.getElementById('paymentSection');
+        const searchAgentBtn = document.getElementById('searchAgentBtn');
+        const agentBox = document.getElementById('agentBox');
+        const paymentForm = document.getElementById('paymentForm');
+        const amountDisplayInput = document.getElementById('amountDisplay');
+        const amountMinusBtn = document.getElementById('amountMinus');
+        const amountPlusBtn = document.getElementById('amountPlus');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const successOverlay = document.getElementById('successOverlay');
+        const finalCloseBtn = document.getElementById('finalCloseBtn');
+        const transactionIdInput = document.getElementById('transactionId');
+
+        // Logic & Interactions
+        
+        // 1. Amount Control Functions
+        let currentAmount = 10000;
+        const baseAmount = 10000;
+
+        function updateAmountDisplay() {
+            // Formatting with commas and preserving +/- style
+            amountDisplayInput.value = `+${currentAmount.toLocaleString()}-`;
+        }
+
+        amountMinusBtn.addEventListener('click', () => {
+            if (currentAmount > baseAmount) {
+                currentAmount -= 1000;
+                updateAmountDisplay();
+            }
+        });
+
+        amountPlusBtn.addEventListener('click', () => {
+            currentAmount += 1000;
+            updateAmountDisplay();
+        });
+
+        // 2. Initial "اشترك الآن" Click
+        subscribeBtn.addEventListener('click', () => {
+            accountOverlay.style.display = 'flex';
+            loadingState.style.display = 'block';
+            accountState.style.display = 'none';
+            
+            // Simulate account generation delay (2 seconds)
+            setTimeout(() => {
+                // Generate random data
+                const accNum = Math.floor(100000 + Math.random() * 900000); // 6 digits
+                const passNum = Math.floor(1000 + Math.random() * 9000);    // 4 digits
+                
+                document.getElementById('generatedAcc').innerText = accNum;
+                document.getElementById('generatedPass').innerText = 'Sudan' + passNum;
+                
+                loadingState.style.display = 'none';
+                accountState.style.display = 'block';
+            }, 2000);
+        });
+
+        // 3. Close Account Modal
+        closeAccountBtn.addEventListener('click', () => {
+            accountOverlay.style.display = 'none';
+            actionArea.style.display = 'none';
+            paymentSection.style.display = 'block';
+            // Set initial interactive amount
+            updateAmountDisplay();
+        });
+
+        // 4. Search for Active Agent
+        searchAgentBtn.addEventListener('click', () => {
+            searchAgentBtn.innerHTML = 'جارٍ البحث عن وكيل نشط <span class="loading-text" style="font-size:1rem; letter-spacing:3px;">•••</span>';
+            searchAgentBtn.style.pointerEvents = 'none';
+            
+            // Simulate agent search delay (1.5 seconds)
+            setTimeout(() => {
+                searchAgentBtn.style.display = 'none';
+                agentBox.style.display = 'block';
+                paymentForm.style.display = 'block';
+            }, 1.500);
+        });
+
+        // 5. Confirm Payment (Final Submission)
+        confirmBtn.addEventListener('click', () => {
+            const transId = transactionIdInput.value;
+            if (transId.trim() === '') {
+                alert('يرجى إدخال رقم العملية كاملاً للمتابعة');
+                return;
+            }
+            
+            // Show loading overlay during submission
+            accountOverlay.style.display = 'flex';
+            loadingState.innerHTML = '<div class="loading-text">•••</div><p style="margin-top:20px; color:var(--text-muted);">جاري تقديم طلبك...</p>';
+            loadingState.style.display = 'block';
+            accountState.style.display = 'none';
+            
+            // Simulate submission delay (2 seconds)
+            setTimeout(() => {
+                accountOverlay.style.display = 'none';
+                successOverlay.style.display = 'flex';
+            }, 2000);
+        });
+
+        // 6. Final Close & Prevent Another Submission
+        finalCloseBtn.addEventListener('click', () => {
+            successOverlay.style.display = 'none';
+            
+            // Disable payment form inputs and button
+            transactionIdInput.disabled = true;
+            amountMinusBtn.disabled = true;
+            amountPlusBtn.disabled = true;
+            confirmBtn.disabled = true;
+            confirmBtn.innerText = 'تم التقديم';
+            confirmBtn.style.background = '#333';
+            confirmBtn.style.color = '#888';
+            confirmBtn.style.boxShadow = 'none';
+            
+            // Display a message indicating no further actions are allowed
+            const lockMsg = document.createElement('p');
+            lockMsg.style.color = 'var(--warning)';
+            lockMsg.style.marginTop = '20px';
+            lockMsg.style.fontWeight = 'bold';
+            lockMsg.style.fontSize = '1.1rem';
+            lockMsg.innerText = 'لقد قمت بتقديم طلب بالفعل. لا يمكنك تقديم طلب آخر في الوقت الحالي.';
+            paymentForm.appendChild(lockMsg);
+        });
+    </script>
+</body>
+</html>
